@@ -9,6 +9,7 @@ __pycache__/
 
 # SQLite database
 src/baddersbot/data/baddersbot.db
+dist/
 
 # IDE/project settings
 .vscode/

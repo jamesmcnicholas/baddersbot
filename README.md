@@ -51,6 +51,16 @@ PYTHONPATH=src pytest
 ```
 *(The automated agent cannot complete this command inside the harness due to runtime limits; please execute locally.)*
 
+## CI / CD
+
+GitHub Actions workflow **Build and Deploy Static Site** (`.github/workflows/deploy.yml`) runs on every push to `main`:
+
+- installs dependencies and executes the smoke test suite
+- renders each HTML screen into static snapshots via `scripts/build_static_site.py`
+- publishes the generated artefact to GitHub Pages
+
+After the first push, enable Pages by selecting **GitHub Actions** as the source in the repository’s Pages settings. The workflow publishes the static site into the default `github-pages` environment.
+
 ## Next Steps
 
 - Expand persistence layer from SQLite prototype to Postgres (production target) and model allocations end-to-end.

@@ -23,7 +23,7 @@ def test_allocation_management_renders() -> None:
 
     assert response.status_code == 200
     assert "Session Allocation Control" in response.text
-    assert "Manual Change Log" in response.text
+    assert "Generate WhatsApp Session Messages" in response.text
 
 
 def test_allocation_messages_renders() -> None:
@@ -33,6 +33,15 @@ def test_allocation_messages_renders() -> None:
     assert response.status_code == 200
     assert "WhatsApp Message Builder" in response.text
     assert "Tue 6pm - Court 1" in response.text
+
+
+def test_availability_planner_renders() -> None:
+    client = get_client()
+    response = client.get("/admin/availability")
+
+    assert response.status_code == 200
+    assert "Availability Planner" in response.text
+    assert "Save Availability" in response.text
 
 
 def test_manage_users_renders() -> None:
