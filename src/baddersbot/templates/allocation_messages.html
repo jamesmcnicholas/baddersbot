@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Allocation Messages</title>
+    <style>
+      :root {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: #1f2430;
+        background: #f3f6fc;
+      }
+
+      body {
+        margin: 0;
+        padding: 2rem;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 0.85rem 1.5rem;
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(15, 40, 90, 0.08);
+      }
+
+      .site-nav__brand {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #1d2636;
+        text-decoration: none;
+      }
+
+      .site-nav__links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .site-nav__link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.45rem 0.95rem;
+        border-radius: 10px;
+        font-weight: 600;
+        color: #374151;
+        text-decoration: none;
+        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .site-nav__link:hover {
+        color: #1e88e5;
+        background: rgba(30, 136, 229, 0.12);
+      }
+
+      .site-nav__link:focus-visible {
+        outline: 2px solid rgba(30, 136, 229, 0.5);
+        outline-offset: 2px;
+      }
+
+      .site-nav__link.is-active {
+        background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+        color: #ffffff;
+        box-shadow: 0 10px 24px rgba(30, 136, 229, 0.25);
+      }
+
+      a {
+        color: #1e88e5;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 1.85rem;
+      }
+
+      header p {
+        margin: 0;
+        color: #5d6374;
+      }
+
+      .note {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        box-shadow: 0 10px 26px rgba(23, 35, 80, 0.07);
+        border-left: 4px solid #1e88e5;
+        font-size: 0.9rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.25rem;
+      }
+
+      .card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 1.25rem;
+        box-shadow: 0 14px 34px rgba(23, 33, 70, 0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .card header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        margin: 0;
+      }
+
+      .card header h2 {
+        margin: 0;
+        font-size: 1.15rem;
+      }
+
+      .session-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        color: #5b6276;
+        font-size: 0.9rem;
+      }
+
+      .tags {
+        display: inline-flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+      }
+
+      .tag {
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: #e7eaf3;
+        color: #394056;
+      }
+
+      .tag.alert {
+        background: #fde4d6;
+        color: #8a3a0f;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 200px;
+        padding: 0.9rem;
+        border-radius: 10px;
+        border: 1px solid #ccd4e6;
+        resize: vertical;
+        font-size: 0.92rem;
+        line-height: 1.45;
+        background: #f9fbff;
+        color: #1f2430;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        .site-nav {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.75rem;
+        }
+
+        .site-nav__links {
+          width: 100%;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="site-nav">
+      <a class="site-nav__brand" href="/admin/dashboard">Baddersbot Admin</a>
+      <div class="site-nav__links">
+        {% for link in nav_links %}
+        <a class="site-nav__link{% if link.is_active %} is-active{% endif %}" href="{{ link.href }}">{{ link.label }}</a>
+        {% endfor %}
+      </div>
+    </nav>
+
+    <header>
+      <h1>WhatsApp Message Builder</h1>
+      <p>Copy, paste, and broadcast the latest roster to each session group once allocations are confirmed.</p>
+      <div class="note">
+        Tip: {{ session_count }} session messages are prepared. Share them in your WhatsApp group or broadcast list to keep everyone aligned.
+      </div>
+    </header>
+
+    <section class="grid">
+      {% for message in messages %}
+      <article class="card" id="{{ message.id }}">
+        <header>
+          <h2>{{ message.label }}</h2>
+          <div class="session-meta">
+            <span>{{ message.date.strftime('%a %d %b %Y') }}</span>
+            <span>&bull;</span>
+            <span>Grade {{ message.grade }}</span>
+            <span>&bull;</span>
+            <span>{{ message.confirmed|length }} confirmed</span>
+            {% if message.has_waitlist %}
+            <span>&bull;</span>
+            <span>{{ message.waitlist|length }} waitlisted</span>
+            {% endif %}
+          </div>
+        </header>
+        <div class="tags">
+          {% if message.has_waitlist %}
+          <span class="tag alert">Includes waitlist</span>
+          {% endif %}
+          {% if message.notes %}
+          <span class="tag">Has notes</span>
+          {% endif %}
+        </div>
+        <textarea readonly>{{ message.message }}</textarea>
+      </article>
+      {% endfor %}
+    </section>
+  </body>
+</html>

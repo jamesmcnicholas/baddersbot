@@ -1,0 +1,190 @@
+{
+  "player_directory": [
+    {"id": "player-001", "name": "Amelia Chan", "grade": "A", "availability_note": "Weekday early", "payment_status": "Paid"},
+    {"id": "player-002", "name": "Noah Patel", "grade": "B", "availability_note": "Weekday late", "payment_status": "Pending"},
+    {"id": "player-003", "name": "Luis Romero", "grade": "C", "availability_note": "Weekend", "payment_status": "Paid"},
+    {"id": "player-004", "name": "Eva Müller", "grade": "B", "availability_note": "Weekday evenings", "payment_status": "Overdue"},
+    {"id": "player-005", "name": "Charlotte Lin", "grade": "A", "availability_note": "Weekday early", "payment_status": "Pending"},
+    {"id": "player-006", "name": "Yara Sato", "grade": "A", "availability_note": "Weekend mornings", "payment_status": "Paid"},
+    {"id": "player-007", "name": "Samira Idris", "grade": "C", "availability_note": "Weekend", "payment_status": "Paid"},
+    {"id": "player-008", "name": "Ivy Chen", "grade": "B", "availability_note": "Weekday early", "payment_status": "Paid"}
+  ],
+  "player_summaries": [
+    {"name": "Amelia Chan", "grade": "A", "sessions_allocated": 6, "payment_status": "Paid", "notes": ""},
+    {"name": "Noah Patel", "grade": "B", "sessions_allocated": 4, "payment_status": "Pending", "notes": "Prefers weekday late"},
+    {"name": "Luis Romero", "grade": "C", "sessions_allocated": 5, "payment_status": "Paid", "notes": ""},
+    {"name": "Eva Müller", "grade": "B", "sessions_allocated": 3, "payment_status": "Overdue", "notes": ""}
+  ],
+  "session_summaries": [
+    {"date": "2024-04-02", "label": "Tue 6pm - Court 1", "grade": "A", "venue": "Old Church", "capacity": 8, "allocated": 8},
+    {"date": "2024-04-04", "label": "Thu 7pm - Court 2", "grade": "B", "venue": "New Church", "capacity": 10, "allocated": 7},
+    {"date": "2024-04-06", "label": "Sat 9am - Court 3", "grade": "C", "venue": "Ernest Bevin", "capacity": 12, "allocated": 9},
+    {"date": "2024-04-09", "label": "Tue 8pm - Court 1", "grade": "A", "venue": "Old Church", "capacity": 8, "allocated": 6}
+  ],
+  "session_allocations": [
+    {
+      "id": "session-2024-04-02-a",
+      "date": "2024-04-02",
+      "label": "Tue 6pm - Court 1",
+      "grade": "A",
+      "capacity": 8,
+      "assigned": [
+        {"name": "Amelia Chan", "grade": "A", "preference_match": true, "payment_status": "Paid", "notes": ""},
+        {"name": "Charlotte Lin", "grade": "A", "preference_match": true, "payment_status": "Pending", "notes": ""},
+        {"name": "Oscar Ng", "grade": "A", "preference_match": false, "payment_status": "Paid", "notes": "Prefers late"},
+        {"name": "Yara Sato", "grade": "A", "preference_match": true, "payment_status": "Paid", "notes": ""}
+      ],
+      "waitlist": [
+        {"name": "Nathan Fox", "grade": "A", "preference_match": true, "payment_status": "Pending", "notes": ""}
+      ],
+      "confidence": "High",
+      "notes": "Two slots reserved for coaching review."
+    },
+    {
+      "id": "session-2024-04-04-b",
+      "date": "2024-04-04",
+      "label": "Thu 7pm - Court 2",
+      "grade": "B",
+      "capacity": 10,
+      "assigned": [
+        {"name": "Noah Patel", "grade": "B", "preference_match": true, "payment_status": "Pending", "notes": "Prefers late"},
+        {"name": "Lena Brooks", "grade": "B", "preference_match": true, "payment_status": "Paid", "notes": ""},
+        {"name": "Ivy Chen", "grade": "B", "preference_match": true, "payment_status": "Paid", "notes": ""},
+        {"name": "Zane Murray", "grade": "B", "preference_match": false, "payment_status": "Overdue", "notes": ""}
+      ],
+      "waitlist": [
+        {"name": "Eva Müller", "grade": "B", "preference_match": true, "payment_status": "Overdue", "notes": ""},
+        {"name": "Theo Ruiz", "grade": "B", "preference_match": false, "payment_status": "Paid", "notes": ""}
+      ],
+      "confidence": "Medium",
+      "notes": "Pending manual swap to satisfy payment priority."
+    },
+    {
+      "id": "session-2024-04-06-c",
+      "date": "2024-04-06",
+      "label": "Sat 9am - Court 3",
+      "grade": "C",
+      "capacity": 12,
+      "assigned": [
+        {"name": "Luis Romero", "grade": "C", "preference_match": true, "payment_status": "Paid", "notes": ""},
+        {"name": "Samira Idris", "grade": "C", "preference_match": true, "payment_status": "Paid", "notes": ""},
+        {"name": "Mia Zhang", "grade": "C", "preference_match": true, "payment_status": "Paid", "notes": ""},
+        {"name": "Leo Hernández", "grade": "C", "preference_match": true, "payment_status": "Pending", "notes": ""},
+        {"name": "Aria Kapoor", "grade": "C", "preference_match": false, "payment_status": "Paid", "notes": ""},
+        {"name": "Jon Park", "grade": "C", "preference_match": true, "payment_status": "Paid", "notes": ""}
+      ],
+      "waitlist": [],
+      "confidence": "High",
+      "notes": ""
+    }
+  ],
+  "weekly_schedule": {
+    "venues": ["Old Church", "New Church", "Ernest Bevin"],
+    "blocks": [
+      {
+        "weekday": "Monday",
+        "time_label": "7.00-8.45pm",
+        "entries": {
+          "Old Church": [{"section": "A Section"}],
+          "New Church": [
+            {"section": "B1 Section"},
+            {"section": "B2 Section"},
+            {"section": "B3 Section"}
+          ]
+        }
+      },
+      {
+        "weekday": "Monday",
+        "time_label": "8.45-10.30pm",
+        "entries": {
+          "Old Church": [{"section": "A Section"}],
+          "New Church": [
+            {"section": "B1 Section"},
+            {"section": "B2 Section"},
+            {"section": "B3 Section"}
+          ]
+        }
+      },
+      {
+        "weekday": "Tuesday",
+        "time_label": "7.00-8.45pm",
+        "entries": {
+          "Old Church": [
+            {"section": "Coaching"},
+            {"section": "B1 Section"}
+          ]
+        }
+      },
+      {
+        "weekday": "Tuesday",
+        "time_label": "8.45-10.30pm",
+        "entries": {
+          "Old Church": [{"section": "B1 Section"}]
+        }
+      },
+      {
+        "weekday": "Wednesday",
+        "time_label": "7.00-8.45pm",
+        "entries": {
+          "Old Church": [{"section": "A Section"}]
+        }
+      },
+      {
+        "weekday": "Wednesday",
+        "time_label": "8.45-10.30pm",
+        "entries": {
+          "Old Church": [{"section": "B1 Section"}]
+        }
+      },
+      {
+        "weekday": "Thursday",
+        "time_label": "8.00-10.30pm",
+        "entries": {
+          "Old Church": [{"section": "B Sections"}]
+        }
+      },
+      {
+        "weekday": "Thursday",
+        "time_label": "7.00-8.45pm",
+        "entries": {
+          "New Church": [
+            {"section": "Coaching"},
+            {"section": "A Section"},
+            {"section": "B1 Section"}
+          ],
+          "Ernest Bevin": [
+            {"section": "A Section"},
+            {"section": "B1 Section"},
+            {"section": "B Sections"}
+          ]
+        }
+      },
+      {
+        "weekday": "Thursday",
+        "time_label": "8.45-10.30pm",
+        "entries": {
+          "New Church": [
+            {"section": "B1 Section"},
+            {"section": "Singles", "note": "Singles"}
+          ],
+          "Ernest Bevin": [
+            {"section": "A Section"},
+            {"section": "B1 Section"},
+            {"section": "B Sections"}
+          ]
+        }
+      },
+      {
+        "weekday": "Saturday",
+        "time_label": "9.00-11.30am",
+        "entries": {
+          "Ernest Bevin": [
+            {"section": "A Section"},
+            {"section": "B1 Section"},
+            {"section": "B Sections"}
+          ]
+        }
+      }
+    ]
+  }
+}

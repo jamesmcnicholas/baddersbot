@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Player Directory</title>
+    <style>
+      :root {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: #1b1f28;
+        background: #f5f7fb;
+      }
+
+      body {
+        margin: 0;
+        padding: 2rem;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 0.85rem 1.5rem;
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(15, 40, 90, 0.08);
+      }
+
+      .site-nav__brand {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #1d2636;
+        text-decoration: none;
+      }
+
+      .site-nav__links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .site-nav__link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.45rem 0.95rem;
+        border-radius: 10px;
+        font-weight: 600;
+        color: #374151;
+        text-decoration: none;
+        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .site-nav__link:hover {
+        color: #1e88e5;
+        background: rgba(30, 136, 229, 0.12);
+      }
+
+      .site-nav__link:focus-visible {
+        outline: 2px solid rgba(30, 136, 229, 0.5);
+        outline-offset: 2px;
+      }
+
+      .site-nav__link.is-active {
+        background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+        color: #ffffff;
+        box-shadow: 0 10px 24px rgba(30, 136, 229, 0.25);
+      }
+
+      header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+      }
+
+      header p {
+        margin: 0;
+        color: #606473;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .search {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #ffffff;
+        border-radius: 999px;
+        padding: 0.35rem 0.75rem;
+        box-shadow: 0 12px 28px rgba(23, 33, 58, 0.08);
+        border: 1px solid #e1e4ef;
+      }
+
+      .search input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 0.95rem;
+        min-width: 220px;
+      }
+
+      .search .clear-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #9aa1b6;
+        font-size: 1.1rem;
+        line-height: 1;
+        padding: 0.2rem;
+        border-radius: 50%;
+      }
+
+      .search .clear-btn:hover {
+        color: #1e88e5;
+        background: rgba(30, 136, 229, 0.12);
+      }
+
+      .search button {
+        border: none;
+        background: #1e88e5;
+        color: #ffffff;
+        padding: 0.45rem 0.95rem;
+        border-radius: 999px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .pill {
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        background: #e6ebf8;
+        font-size: 0.8rem;
+        color: #49506b;
+      }
+
+      .table-container {
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 16px 38px rgba(27, 35, 66, 0.08);
+        max-height: calc(100vh - 280px);
+        overflow-y: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #ffffff;
+      }
+
+      th,
+      td {
+        padding: 0.85rem 1rem;
+        text-align: left;
+      }
+
+      th {
+        background: #f0f3fa;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #5a5f70;
+      }
+
+      tr + tr td {
+        border-top: 1px solid #e7eaf4;
+      }
+
+      .grade-select {
+        padding: 0.4rem 0.6rem;
+        border-radius: 8px;
+        border: 1px solid #cfd6ea;
+        background: #f8faff;
+        font-size: 0.9rem;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .status.paid {
+        background: #d5f5dc;
+        color: #1a6d3c;
+      }
+
+      .status.pending {
+        background: #fff2cc;
+        color: #8a6d1a;
+      }
+
+      .status.overdue {
+        background: #fbd5d5;
+        color: #8b1d1d;
+      }
+
+      .note {
+        color: #6a7084;
+        font-size: 0.9rem;
+      }
+
+      .actions button {
+        border: none;
+        background: #eef1f8;
+        color: #2f3550;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .empty {
+        text-align: center;
+        padding: 3rem;
+        color: #6a7084;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        .site-nav {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.75rem;
+        }
+
+        .site-nav__links {
+          width: 100%;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 0.5rem;
+        }
+
+        .table-container {
+          max-height: none;
+        }
+
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+          display: block;
+        }
+
+        th {
+          position: absolute;
+          left: -9999px;
+        }
+
+        td {
+          position: relative;
+          padding-left: 45%;
+          min-height: 2.75rem;
+        }
+
+        td::before {
+          position: absolute;
+          left: 1rem;
+          width: 40%;
+          font-weight: 600;
+          color: #61646f;
+          content: attr(data-label);
+        }
+
+        tr + tr td {
+          border-top: none;
+        }
+
+        .actions button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="site-nav">
+      <a class="site-nav__brand" href="/admin/dashboard">Baddersbot Admin</a>
+      <div class="site-nav__links">
+        {% for link in nav_links %}
+        <a class="site-nav__link{% if link.is_active %} is-active{% endif %}" href="{{ link.href }}">{{ link.label }}</a>
+        {% endfor %}
+      </div>
+    </nav>
+
+    <header>
+      <h1>Player Directory</h1>
+      <p>Review grades, track payment status, and keep player info current.</p>
+    </header>
+
+    <div class="toolbar">
+      <form class="search" method="get">
+        <input
+          type="search"
+          name="search"
+          placeholder="Search players by name, grade, or status"
+          value="{{ search_query }}"
+        />
+        {% if search_query %}
+        <a class="clear-btn" href="/admin/users" aria-label="Clear search">&times;</a>
+        {% endif %}
+        <button type="submit">Search</button>
+      </form>
+      <span class="pill">Showing {{ visible_count }} of {{ total_count }} players</span>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Player</th>
+            <th scope="col">Grade</th>
+            <th scope="col">Payment</th>
+            <th scope="col">Availability</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if records %}
+            {% for record in records %}
+            <tr>
+              <td data-label="Player">
+                <strong>{{ record.name }}</strong>
+                <div class="note">{{ record.id }}</div>
+              </td>
+              <td data-label="Grade">
+                <select class="grade-select" name="grade-{{ record.id }}">
+                  {% for option in ['A', 'B', 'C'] %}
+                  <option value="{{ option }}"{% if record.grade == option %} selected{% endif %}>{{ option }}</option>
+                  {% endfor %}
+                </select>
+              </td>
+              <td data-label="Payment">
+                {% set status_class = 'status ' + record.payment_status.lower() %}
+                <span class="{{ status_class }}">{{ record.payment_status }}</span>
+              </td>
+              <td data-label="Availability">
+                <div class="note">{{ record.availability_note }}</div>
+              </td>
+              <td data-label="Actions" class="actions">
+                <button type="button">Save Grade</button>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td class="empty" colspan="5">No players match your search just yet.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

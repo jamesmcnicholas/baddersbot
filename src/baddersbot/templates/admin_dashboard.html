@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Baddersbot Admin Dashboard</title>
+    <style>
+      :root {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: #1d1d1f;
+        background: #f6f8fb;
+      }
+
+      body {
+        margin: 0;
+        padding: 2rem;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 0.85rem 1.5rem;
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(15, 40, 90, 0.08);
+      }
+
+      .site-nav__brand {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #1d2636;
+        text-decoration: none;
+      }
+
+      .site-nav__links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .site-nav__link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.45rem 0.95rem;
+        border-radius: 10px;
+        font-weight: 600;
+        color: #374151;
+        text-decoration: none;
+        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .site-nav__link:hover {
+        color: #1e88e5;
+        background: rgba(30, 136, 229, 0.12);
+      }
+
+      .site-nav__link:focus-visible {
+        outline: 2px solid rgba(30, 136, 229, 0.5);
+        outline-offset: 2px;
+      }
+
+      .site-nav__link.is-active {
+        background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+        color: #ffffff;
+        box-shadow: 0 10px 24px rgba(30, 136, 229, 0.25);
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 2rem;
+      }
+
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 1rem;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+        color: white;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 8px 22px rgba(30, 136, 229, 0.25);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.75rem;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .metric-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 1.25rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      }
+
+      .metric-label {
+        font-size: 0.85rem;
+        color: #61646b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+      }
+
+      .metric-value {
+        font-size: 2rem;
+        font-weight: 600;
+      }
+
+      section {
+        margin-bottom: 2.5rem;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.25rem;
+      }
+
+      .section-header h2 {
+        margin: 0;
+        font-size: 1.35rem;
+      }
+
+      .section-header p {
+        margin: 0.35rem 0 0;
+        color: #5b5f6e;
+        font-size: 0.95rem;
+      }
+
+      .week-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+      }
+
+      .session-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 1.25rem;
+        box-shadow: 0 12px 30px rgba(20, 33, 72, 0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 0.9rem;
+      }
+
+      .session-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+      }
+
+      .session-top h3 {
+        margin: 0;
+        font-size: 1.1rem;
+      }
+
+      .session-date {
+        margin: 0.35rem 0 0;
+        color: #626674;
+        font-size: 0.9rem;
+      }
+
+      .session-venue {
+        margin: 0.25rem 0 0;
+        color: #445065;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .grade-pill {
+        padding: 0.3rem 0.7rem;
+        border-radius: 999px;
+        background: #edf4ff;
+        color: #2563eb;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      .fill-bar {
+        position: relative;
+        width: 100%;
+        height: 12px;
+        border-radius: 999px;
+        background: #e5e9f2;
+        overflow: hidden;
+      }
+
+      .fill-bar-progress {
+        position: absolute;
+        inset: 0;
+        width: 0;
+        background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+        transition: width 0.3s ease;
+      }
+
+      .fill-stats {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #535665;
+      }
+
+      .session-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+      }
+
+      .confidence {
+        padding: 0.2rem 0.6rem;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+
+      .confidence.full {
+        background: #d2f4e8;
+        color: #11694c;
+      }
+
+      .confidence.nearly {
+        background: #fff1c8;
+        color: #8a6d1a;
+      }
+
+      .confidence.open {
+        background: #e7ecff;
+        color: #1d3faa;
+      }
+
+      .inline-link {
+        color: #1e88e5;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .inline-link:hover {
+        text-decoration: underline;
+      }
+
+      .empty-state {
+        grid-column: 1 / -1;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: inset 0 0 0 1px #e1e5ef;
+        color: #5b5f6e;
+      }
+
+      .weekly-table-wrapper {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 16px 34px rgba(23, 33, 70, 0.08);
+        overflow-x: auto;
+      }
+
+      .weekly-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .weekly-table th,
+      .weekly-table td {
+        padding: 0.85rem 1rem;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .weekly-table thead th {
+        background: #f0f3fa;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 0.8rem;
+        color: #5a6070;
+      }
+
+      .weekly-table tbody .day-row th {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        font-weight: 700;
+        background: #e8efff;
+        color: #1d2a44;
+      }
+
+      .weekly-table tbody th.time-cell {
+        width: 180px;
+        white-space: nowrap;
+        font-weight: 600;
+        color: #2f3347;
+        background: #ffffff;
+      }
+
+      .time-slot-row.is-striped th.time-cell,
+      .time-slot-row.is-striped td {
+        background: #f9fbff;
+      }
+
+      .time-cell .slot {
+        color: #5b5f6e;
+        font-size: 0.9rem;
+      }
+
+      .session-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.45rem 0.75rem;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin: 0.2rem 0;
+      }
+
+      .session-chip--link {
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .session-chip--link:hover,
+      .session-chip--link:focus-visible {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(30, 136, 229, 0.25);
+        outline: none;
+      }
+
+      .chip-note {
+        margin-left: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+
+      .session-empty {
+        min-height: 1.6rem;
+        color: #c5cad8;
+        font-size: 0.85rem;
+      }
+
+      .alerts {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .alert-item {
+        background: #ffffff;
+        border-left: 4px solid #1e88e5;
+        padding: 0.9rem 1.1rem;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+      }
+
+      .alert-category {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #1e88e5;
+        margin-bottom: 0.25rem;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        .site-nav {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.75rem;
+        }
+
+        .site-nav__links {
+          width: 100%;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 0.5rem;
+        }
+
+        header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+
+        .weekly-table-wrapper {
+          border-radius: 12px;
+        }
+
+        .time-cell {
+          width: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="site-nav">
+      <a class="site-nav__brand" href="/admin/dashboard">Baddersbot Admin</a>
+      <div class="site-nav__links">
+        {% for link in nav_links %}
+        <a class="site-nav__link{% if link.is_active %} is-active{% endif %}" href="{{ link.href }}">{{ link.label }}</a>
+        {% endfor %}
+      </div>
+    </nav>
+
+    <header>
+      <div>
+        <h1>Administrator Dashboard</h1>
+        <p>Monitor allocation health and upcoming tasks for the badminton club.</p>
+      </div>
+      <div>
+        <div>Phase 1 &bull; April Cycle</div>
+        <div style="margin-top: 0.75rem; text-align: right;">
+          <a class="cta" href="/admin/allocation">Open Allocation Console</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="metrics">
+      <div class="metric-card">
+        <div class="metric-label">Active Players</div>
+        <div class="metric-value">{{ metrics.total_players }}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Sessions This Month</div>
+        <div class="metric-value">{{ metrics.sessions_this_month }}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Pending Payments</div>
+        <div class="metric-value">{{ metrics.pending_payments }}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Sessions With Open Slots</div>
+        <div class="metric-value">{{ metrics.unfilled_sessions }}</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <div>
+          <h2>Upcoming Week Sessions</h2>
+          <p>Week of {{ week_window_label }} &bull; Focus on fill status for the next seven days.</p>
+        </div>
+      </div>
+      <div class="week-grid">
+        {% for session in upcoming_sessions %}
+        <article class="session-card">
+          <div class="session-top">
+            <div>
+              <h3>{{ session.label }}</h3>
+              <p class="session-date">{{ session.date.strftime('%a %d %b %Y') }}</p>
+              {% if session.venue %}
+              <p class="session-venue">{{ session.venue }}</p>
+              {% endif %}
+            </div>
+            <span class="grade-pill">Grade {{ session.grade }}</span>
+          </div>
+          <div class="fill-bar">
+            <div
+              class="fill-bar-progress"
+              style="width: {{ session.fill_percentage }}%"
+            ></div>
+          </div>
+          <div class="fill-stats">
+            <span>{{ session.allocated }}/{{ session.capacity }} filled</span>
+            <span>{{ session.remaining_slots }} open</span>
+          </div>
+          <div class="session-footer">
+            <span
+              class="confidence {% if session.remaining_slots == 0 %}full{% elif session.remaining_slots <= 2 %}nearly{% else %}open{% endif %}"
+              >{{ session.fill_percentage }}% filled</span
+            >
+            <a class="inline-link" href="/admin/allocation#{{ session.date.strftime('%Y-%m-%d') }}">Review session</a>
+          </div>
+        </article>
+        {% else %}
+        <div class="empty-state">
+          <p>No sessions scheduled for the upcoming week. Check back after creating the next cycle.</p>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <div>
+          <h2>Weekly Venue Plan</h2>
+          <p>Reference view of standing sessions grouped by venue and slot.</p>
+        </div>
+      </div>
+      <div class="weekly-table-wrapper">
+        <table class="weekly-table">
+          <thead>
+            <tr>
+              <th scope="col">Day &amp; Time</th>
+              {% for venue in weekly_venues %}
+              <th scope="col">{{ venue }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% set stripe = namespace(is_alt=False) %}
+            {% for day in weekly_day_blocks %}
+            <tr class="day-row">
+              <th class="day-heading" colspan="{{ weekly_venues|length + 1 }}">{{ day.weekday }}</th>
+            </tr>
+              {% for block in day.blocks %}
+              {% set stripe.is_alt = not stripe.is_alt %}
+              <tr class="time-slot-row{% if stripe.is_alt %} is-striped{% endif %}">
+                <th class="time-cell" scope="row">
+                  <div class="slot">{{ block.time_label }}</div>
+                </th>
+                {% for venue in weekly_venues %}
+                  {% set items = block.entries.get(venue, []) %}
+                  <td>
+                    {% if items %}
+                      {% for item in items %}
+                        {% set color = weekly_colors.get(item.section, weekly_color_default) %}
+                        {% if item.allocation_anchor %}
+                        <a
+                          class="session-chip session-chip--link"
+                          href="/admin/allocation#{{ item.allocation_anchor }}"
+                          style="background: {{ color.bg }}; color: {{ color.fg }};"
+                        >
+                          {{ item.section }}{% if item.note %}<span class="chip-note">{{ item.note }}</span>{% endif %}
+                        </a>
+                        {% else %}
+                        <div class="session-chip" style="background: {{ color.bg }}; color: {{ color.fg }};">
+                          {{ item.section }}{% if item.note %}<span class="chip-note">{{ item.note }}</span>{% endif %}
+                        </div>
+                        {% endif %}
+                      {% endfor %}
+                    {% else %}
+                      <div class="session-empty">&nbsp;</div>
+                    {% endif %}
+                  </td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Alerts & Follow-ups</h2>
+      <div class="alerts">
+        {% if alerts %}
+          {% for alert in alerts %}
+            <div class="alert-item">
+              <div class="alert-category">{{ alert.category }}</div>
+              <div>{{ alert.message }}</div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="alert-item">
+            <div class="alert-category">All clear</div>
+            <div>No immediate actions required.</div>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+
+# SQLite database
+src/baddersbot/data/baddersbot.db
+
+# IDE/project settings
+.vscode/
+.idea/
+
+# Coverage/test artifacts
+.coverage
+htmlcov/
+pytest_cache/
+
+# OS
+.DS_Store

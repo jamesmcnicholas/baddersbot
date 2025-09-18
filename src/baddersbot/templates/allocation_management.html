@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Manage Session Allocation</title>
+    <style>
+      :root {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: #1d1d1f;
+        background: #f4f6fb;
+      }
+
+      body {
+        margin: 0;
+        padding: 2rem;
+        background: linear-gradient(180deg, #f7f9fc 0%, #edf1f9 100%);
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 0.85rem 1.5rem;
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(15, 40, 90, 0.08);
+      }
+
+      .site-nav__brand {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #1d2636;
+        text-decoration: none;
+      }
+
+      .site-nav__links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .site-nav__link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.45rem 0.95rem;
+        border-radius: 10px;
+        font-weight: 600;
+        color: #374151;
+        text-decoration: none;
+        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .site-nav__link:hover {
+        color: #1e88e5;
+        background: rgba(30, 136, 229, 0.12);
+      }
+
+      .site-nav__link:focus-visible {
+        outline: 2px solid rgba(30, 136, 229, 0.5);
+        outline-offset: 2px;
+      }
+
+      .site-nav__link.is-active {
+        background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+        color: #ffffff;
+        box-shadow: 0 10px 24px rgba(30, 136, 229, 0.25);
+      }
+
+      a {
+        color: #1e88e5;
+        text-decoration: none;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+      }
+
+      header p {
+        margin: 0.4rem 0 0;
+        color: #555;
+      }
+
+      .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 1.4rem;
+        box-shadow: 0 12px 30px rgba(15, 35, 95, 0.08);
+      }
+
+      .card h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+        color: #60636b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .card strong {
+        font-size: 2rem;
+      }
+
+      .card small {
+        display: block;
+        margin-top: 0.4rem;
+        color: #8c91a3;
+      }
+
+      .session-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .grade-anchor {
+        display: block;
+        position: relative;
+        top: -90px;
+        height: 0;
+      }
+
+      .session-card {
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 14px 34px rgba(18, 33, 65, 0.07);
+        overflow: hidden;
+        border: 1px solid rgba(30, 136, 229, 0.08);
+      }
+
+      .session-header {
+        padding: 1.2rem 1.5rem;
+        background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+
+      .session-header h3 {
+        margin: 0;
+        font-size: 1.15rem;
+      }
+
+      .session-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .session-body {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 1.4rem;
+        padding: 1.5rem;
+      }
+
+      .list-block h4 {
+        margin: 0 0 0.6rem;
+        font-size: 0.95rem;
+        color: #3a3d44;
+      }
+
+      .chip-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .chip {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.55rem 0.75rem;
+        background: #f5f7fb;
+        border-radius: 10px;
+        border: 1px solid rgba(94, 104, 126, 0.08);
+      }
+
+      .chip .name {
+        font-weight: 600;
+      }
+
+      .chip .flags {
+        display: flex;
+        gap: 0.45rem;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .flag {
+        padding: 0.2rem 0.45rem;
+        border-radius: 999px;
+        background: #e3e7f3;
+        color: #4b4f60;
+      }
+
+      .flag.match {
+        background: #d2f4e8;
+        color: #11694c;
+      }
+
+      .flag.mismatch {
+        background: #fde4d3;
+        color: #a04b0f;
+      }
+
+      .flag.overdue {
+        background: #f9d6d6;
+        color: #8f1d1d;
+      }
+
+      .actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      button {
+        padding: 0.45rem 0.85rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .link-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.45rem 0.85rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        background: #1e88e5;
+        color: white;
+      }
+
+      button.primary {
+        background: #1e88e5;
+        color: white;
+      }
+
+      button.secondary {
+        background: #eef1f8;
+        color: #2f3550;
+      }
+
+      .notes {
+        background: #f4f6fb;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        color: #5a5d6b;
+      }
+
+      .badge {
+        padding: 0.25rem 0.5rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #1e88e5;
+        background: rgba(30, 136, 229, 0.16);
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        .site-nav {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.75rem;
+        }
+
+        .site-nav__links {
+          width: 100%;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 0.5rem;
+        }
+
+        header {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="site-nav">
+      <a class="site-nav__brand" href="/admin/dashboard">Baddersbot Admin</a>
+      <div class="site-nav__links">
+        {% for link in nav_links %}
+        <a class="site-nav__link{% if link.is_active %} is-active{% endif %}" href="{{ link.href }}">{{ link.label }}</a>
+        {% endfor %}
+      </div>
+    </nav>
+
+    <header>
+      <div>
+        <h1>Session Allocation Control</h1>
+        <p>Review suggested assignments, handle manual overrides, and monitor waitlists.</p>
+      </div>
+      <div>
+        <button class="secondary">Re-run Allocation</button>
+        <button class="primary">Publish Schedule</button>
+        <a class="link-button" href="/admin/allocation/messages">Generate WhatsApp Session Messages</a>
+      </div>
+    </header>
+
+    <section class="summary-cards">
+      <div class="card">
+        <h2>Total Sessions</h2>
+        <strong>{{ summary.total_sessions }}</strong>
+        <small>Across all grades for this month</small>
+      </div>
+      <div class="card">
+        <h2>Fully Booked</h2>
+        <strong>{{ summary.fully_booked }}</strong>
+        <small>Sessions at 100% capacity</small>
+      </div>
+      <div class="card">
+        <h2>Open Slots</h2>
+        <strong>{{ summary.open_slots }}</strong>
+        <small>Seats available before waitlist</small>
+      </div>
+      <div class="card">
+        <h2>Waitlisted Players</h2>
+        <strong>{{ summary.waitlisted_players }}</strong>
+        <small>Players pending assignment</small>
+      </div>
+    </section>
+
+    <section class="session-list">
+      {% set grade_index = namespace(seen=[]) %}
+      {% for session in sessions %}
+        {% if session.grade not in grade_index.seen %}
+          {% set _ = grade_index.seen.append(session.grade) %}
+          <span id="grade-{{ session.grade | lower }}" class="grade-anchor" aria-hidden="true"></span>
+        {% endif %}
+        <article class="session-card" id="{{ session.id }}" tabindex="-1">
+          <div class="session-header">
+            <div>
+              <h3>{{ session.label }}</h3>
+              <div class="session-meta">
+                <span>{{ session.date.strftime('%a %d %b %Y') }}</span>
+                <span>Grade {{ session.grade }}</span>
+                <span>{{ session.allocated }}/{{ session.capacity }} filled</span>
+              </div>
+            </div>
+            <div class="badge">Confidence: {{ session.confidence }}</div>
+          </div>
+          <div class="session-body">
+            <div class="list-block">
+              <h4>Assigned Players</h4>
+              <div class="chip-list">
+                {% for player in session.assigned %}
+                <div class="chip">
+                  <div>
+                    <div class="name">{{ player.name }}</div>
+                    <div class="flags">
+                      <span class="flag{% if player.preference_match %} match{% else %} mismatch{% endif %}">
+                        {% if player.preference_match %}Pref Match{% else %}Override{% endif %}
+                      </span>
+                      {% if player.payment_status != 'Paid' %}
+                        <span class="flag overdue">{{ player.payment_status }}</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="actions">
+                    <button class="secondary">Swap</button>
+                    <button class="secondary">Waitlist</button>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="list-block">
+              <h4>Waitlist</h4>
+              <div class="chip-list">
+                {% if session.waitlist %}
+                  {% for player in session.waitlist %}
+                  <div class="chip">
+                    <div>
+                      <div class="name">{{ player.name }}</div>
+                      <div class="flags">
+                        <span class="flag{% if player.preference_match %} match{% else %} mismatch{% endif %}">
+                          {% if player.preference_match %}Pref Match{% else %}Override{% endif %}
+                        </span>
+                        {% if player.payment_status != 'Paid' %}
+                          <span class="flag overdue">{{ player.payment_status }}</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="actions">
+                      <button class="primary">Assign</button>
+                    </div>
+                  </div>
+                  {% endfor %}
+                {% else %}
+                  <div class="chip">
+                    <div class="name">No waitlisted players</div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div>
+              <h4>Notes & Controls</h4>
+              <div class="notes">
+                {{ session.notes if session.notes else 'No outstanding notes for this session.' }}
+              </div>
+              <div class="actions" style="margin-top: 0.75rem;">
+                <button class="secondary">Override Capacity</button>
+                <button class="secondary">Mark Confirmed</button>
+              </div>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </section>
+  </body>
+</html>

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Availability Planner</title>
+    <style>
+      :root {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: #1f2430;
+        background: #f6f8fc;
+      }
+
+      body {
+        margin: 0;
+        padding: 2rem;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 0.85rem 1.5rem;
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(15, 40, 90, 0.08);
+      }
+
+      .site-nav__brand {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #1d2636;
+        text-decoration: none;
+      }
+
+      .site-nav__links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .site-nav__link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.45rem 0.95rem;
+        border-radius: 10px;
+        font-weight: 600;
+        color: #374151;
+        text-decoration: none;
+        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .site-nav__link:hover {
+        color: #1e88e5;
+        background: rgba(30, 136, 229, 0.12);
+      }
+
+      .site-nav__link:focus-visible {
+        outline: 2px solid rgba(30, 136, 229, 0.5);
+        outline-offset: 2px;
+      }
+
+      .site-nav__link.is-active {
+        background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+        color: #ffffff;
+        box-shadow: 0 10px 24px rgba(30, 136, 229, 0.25);
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 1.9rem;
+      }
+
+      header p {
+        margin: 0.5rem 0 0;
+        color: #586174;
+      }
+
+      .planner-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 1.75rem;
+        box-shadow: 0 16px 34px rgba(23, 35, 70, 0.08);
+        margin-bottom: 2rem;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      label {
+        font-weight: 600;
+        color: #2f3646;
+      }
+
+      select,
+      input[type="search"],
+      input[type="date"] {
+        padding: 0.6rem 0.75rem;
+        border-radius: 10px;
+        border: 1px solid #d2d8e6;
+        font-size: 0.95rem;
+        background: #f9fbff;
+      }
+
+      .player-picker {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .date-picker-row {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .primary-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+        color: #ffffff;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .secondary-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 999px;
+        background: #eef2fb;
+        color: #1f3b63;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.45rem 0.75rem;
+        border-radius: 999px;
+        background: #e6f0ff;
+        color: #17406d;
+        font-size: 0.85rem;
+      }
+
+      .chip button {
+        border: none;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .calendar {
+        margin-top: 0.75rem;
+        border: 1px solid #dbe1f1;
+        border-radius: 16px;
+        background: #ffffff;
+        padding: 1rem;
+        box-shadow: inset 0 0 0 1px rgba(30, 136, 229, 0.04);
+      }
+
+      .calendar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+      }
+
+      .calendar-header button {
+        border: none;
+        background: #eef2fb;
+        color: #1f3b63;
+        border-radius: 999px;
+        padding: 0.4rem 0.75rem;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .calendar-header button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .calendar-month-label {
+        font-weight: 700;
+        font-size: 1rem;
+        color: #273249;
+      }
+
+      .calendar-weekdays,
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 2.35rem);
+        gap: 0.25rem;
+        justify-content: center;
+      }
+
+      .calendar-weekdays span {
+        text-align: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #6b748a;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .calendar-day {
+        position: relative;
+        width: 2.35rem;
+        height: 2.35rem;
+        border-radius: 10px;
+        border: none;
+        background: #f3f5ff;
+        color: #1f2a44;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .calendar-day:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(23, 40, 95, 0.12);
+      }
+
+      .calendar-day--weekend {
+        background: #f9f1ff;
+        color: #4a2f7a;
+      }
+
+      .calendar-day--today {
+        box-shadow: inset 0 0 0 2px rgba(30, 136, 229, 0.7);
+      }
+
+      .calendar-day--selected {
+        background: linear-gradient(135deg, #1e88e5 0%, #42a5f5 100%);
+        color: #ffffff;
+        box-shadow: 0 12px 24px rgba(30, 136, 229, 0.3);
+      }
+
+      .calendar-day--muted {
+        background: transparent;
+        color: #b7bfd2;
+        cursor: default;
+        box-shadow: none;
+      }
+
+      .calendar-day--muted:hover {
+        transform: none;
+      }
+
+      .calendar-actions {
+        margin-top: 0.75rem;
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .flash {
+        margin-bottom: 1.5rem;
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        background: #e6f7ed;
+        color: #0f5132;
+        font-weight: 600;
+        border: 1px solid #b6e0c5;
+      }
+
+      .submissions {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 12px 26px rgba(20, 32, 70, 0.07);
+      }
+
+      .submissions h2 {
+        margin: 0 0 1rem;
+      }
+
+      .submission-item + .submission-item {
+        border-top: 1px solid #e4e8f3;
+        margin-top: 1rem;
+        padding-top: 1rem;
+      }
+
+      .submission-item strong {
+        display: block;
+        font-size: 1rem;
+        color: #1f2a3b;
+      }
+
+      .submission-dates {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        margin-top: 0.5rem;
+      }
+
+      .submission-date {
+        padding: 0.3rem 0.6rem;
+        border-radius: 999px;
+        background: #f0f4ff;
+        color: #1d3463;
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 1rem;
+        }
+
+        .site-nav {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.75rem;
+        }
+
+        .site-nav__links {
+          width: 100%;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 0.5rem;
+        }
+
+        header {
+          flex-direction: column;
+        }
+
+        .calendar-weekdays,
+        .calendar-grid {
+          grid-template-columns: repeat(7, 2rem);
+        }
+
+        .calendar-day {
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="site-nav">
+      <a class="site-nav__brand" href="/admin/dashboard">Baddersbot Admin</a>
+      <div class="site-nav__links">
+        {% for link in nav_links %}
+        <a class="site-nav__link{% if link.is_active %} is-active{% endif %}" href="{{ link.href }}">{{ link.label }}</a>
+        {% endfor %}
+      </div>
+    </nav>
+
+    <header>
+      <div>
+        <h1>Availability Planner</h1>
+        <p>Select a player and earmark their dates before running the monthly allocation.</p>
+      </div>
+    </header>
+
+    {% if flash %}
+    <div class="flash">{{ flash.message }}</div>
+    {% endif %}
+
+    <section class="planner-card">
+      <form id="availability-form" method="post">
+        <div class="input-group">
+          <div class="player-picker">
+            <label for="player-search">Find player</label>
+            <input
+              id="player-search"
+              type="search"
+              placeholder="Search by name or grade"
+              autocomplete="off"
+            />
+            <select id="player-select" name="player_id" required size="6">
+              {% for player in players %}
+              <option value="{{ player.id }}">{{ player.label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <label>Dates available</label>
+            <div class="calendar">
+              <div class="calendar-header">
+                <button type="button" id="prev-month" aria-label="Previous month">&#8592;</button>
+                <span class="calendar-month-label" id="calendar-month-label"></span>
+                <button type="button" id="next-month" aria-label="Next month">&#8594;</button>
+              </div>
+              <div class="calendar-weekdays">
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+                <span>Sun</span>
+              </div>
+              <div class="calendar-grid" id="availability-calendar"></div>
+            </div>
+            <div class="calendar-actions">
+              <button class="secondary-button" type="button" id="clear-dates">Clear selected dates</button>
+            </div>
+            <ul class="chips" id="selected-dates"></ul>
+            <input id="available-dates" type="hidden" name="available_dates" value="" />
+          </div>
+
+          <div>
+            <button class="primary-button" type="submit">Save Availability</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="submissions">
+      <h2>Recent submissions</h2>
+      {% if submissions %}
+        {% for submission in submissions %}
+        <div class="submission-item">
+          <strong>{{ submission.player_name }}</strong>
+          {% if submission.dates %}
+          <div class="submission-dates">
+            {% for day in submission.dates %}
+            <span class="submission-date">{{ day.strftime('%d %b %Y') }}</span>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="submission-dates"><span class="submission-date">No specific dates set</span></div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      {% else %}
+        <p>No availability recorded yet this cycle.</p>
+      {% endif %}
+    </section>
+
+    <script>
+      (function () {
+        const playerSearch = document.getElementById('player-search');
+        const playerSelect = document.getElementById('player-select');
+        const clearDatesBtn = document.getElementById('clear-dates');
+        const calendarGrid = document.getElementById('availability-calendar');
+        const monthLabel = document.getElementById('calendar-month-label');
+        const prevMonthBtn = document.getElementById('prev-month');
+        const nextMonthBtn = document.getElementById('next-month');
+        const selectedDatesList = document.getElementById('selected-dates');
+        const hiddenField = document.getElementById('available-dates');
+        const selectedDates = new Set();
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const earliestMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+        function defaultCalendarMonth() {
+          return new Date(today.getFullYear(), today.getMonth() + 1, 1);
+        }
+
+        let calendarMonth = defaultCalendarMonth();
+
+        function normalise(text) {
+          return text.toLowerCase();
+        }
+
+        function filterPlayers() {
+          const query = normalise(playerSearch.value.trim());
+          const options = Array.from(playerSelect.options);
+          options.forEach((option) => {
+            const label = normalise(option.textContent || option.value);
+            const matches = !query || label.includes(query);
+            option.hidden = !matches;
+          });
+          const firstVisible = options.find((option) => !option.hidden);
+          if (firstVisible) {
+            playerSelect.value = firstVisible.value;
+          }
+        }
+
+        function formatDisplayDate(iso) {
+          const parsed = new Date(`${iso}T00:00:00`);
+          return parsed.toLocaleDateString(undefined, {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          });
+        }
+
+        function renderDates() {
+          selectedDatesList.innerHTML = '';
+          const sorted = Array.from(selectedDates).sort();
+          sorted.forEach((value) => {
+            const li = document.createElement('li');
+            li.className = 'chip';
+            li.innerHTML = `${formatDisplayDate(value)} <button type="button" data-date="${value}">×</button>`;
+            selectedDatesList.appendChild(li);
+          });
+          hiddenField.value = sorted.join(',');
+        }
+
+        function renderCalendar() {
+          const year = calendarMonth.getFullYear();
+          const month = calendarMonth.getMonth();
+          monthLabel.textContent = calendarMonth.toLocaleDateString(undefined, {
+            month: 'long',
+            year: 'numeric',
+          });
+
+          const isEarliestMonth =
+            calendarMonth.getFullYear() === earliestMonth.getFullYear() &&
+            calendarMonth.getMonth() === earliestMonth.getMonth();
+          prevMonthBtn.disabled = isEarliestMonth;
+
+          calendarGrid.innerHTML = '';
+
+          const firstDay = new Date(year, month, 1);
+          const startIndex = (firstDay.getDay() + 6) % 7; // Monday as first column
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+          const totalCells = Math.ceil((startIndex + daysInMonth) / 7) * 7;
+
+          for (let cell = 0; cell < totalCells; cell += 1) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'calendar-day';
+
+            if (cell < startIndex || cell >= startIndex + daysInMonth) {
+              button.classList.add('calendar-day--muted');
+              button.disabled = true;
+              calendarGrid.appendChild(button);
+              continue;
+            }
+
+            const dayNumber = cell - startIndex + 1;
+            const cellDate = new Date(year, month, dayNumber);
+            const iso = cellDate.toISOString().slice(0, 10);
+            button.dataset.date = iso;
+            button.textContent = String(dayNumber);
+
+            const weekdayIndex = cell % 7;
+            if (weekdayIndex >= 5) {
+              button.classList.add('calendar-day--weekend');
+            }
+
+            if (cellDate.getTime() === today.getTime()) {
+              button.classList.add('calendar-day--today');
+            }
+
+            if (cellDate < today) {
+              button.classList.add('calendar-day--muted');
+              button.disabled = true;
+            }
+
+            if (selectedDates.has(iso)) {
+              button.classList.add('calendar-day--selected');
+            }
+
+            calendarGrid.appendChild(button);
+          }
+        }
+
+        function toggleDate(iso) {
+          if (selectedDates.has(iso)) {
+            selectedDates.delete(iso);
+          } else {
+            selectedDates.add(iso);
+          }
+          renderDates();
+          renderCalendar();
+        }
+
+        playerSearch.addEventListener('input', filterPlayers);
+
+        playerSelect.addEventListener('change', () => {
+          loadAvailabilityForSelected(true);
+        });
+
+        clearDatesBtn.addEventListener('click', () => {
+          selectedDates.clear();
+          renderDates();
+          renderCalendar();
+        });
+
+        calendarGrid.addEventListener('click', (event) => {
+          const target = event.target instanceof HTMLElement ? event.target.closest('button[data-date]') : null;
+          if (!target) {
+            return;
+          }
+          if (target.hasAttribute('disabled')) {
+            return;
+          }
+          const iso = target.dataset.date;
+          if (iso) {
+            toggleDate(iso);
+          }
+        });
+
+        prevMonthBtn.addEventListener('click', () => {
+          calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1);
+          renderCalendar();
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+          calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1);
+          renderCalendar();
+        });
+
+        selectedDatesList.addEventListener('click', (event) => {
+          const target = event.target instanceof HTMLElement ? event.target : null;
+          if (target && target.dataset.date) {
+            selectedDates.delete(target.dataset.date);
+            renderDates();
+            renderCalendar();
+          }
+        });
+
+        async function loadAvailabilityForSelected(adjustMonth) {
+          const playerId = playerSelect.value;
+          if (!playerId) {
+            selectedDates.clear();
+            renderDates();
+            renderCalendar();
+            return;
+          }
+
+          try {
+            const response = await fetch(`/admin/availability/${encodeURIComponent(playerId)}/slots`, {
+              headers: { Accept: 'application/json' },
+            });
+            if (!response.ok) {
+              selectedDates.clear();
+              renderDates();
+              renderCalendar();
+              return;
+            }
+
+            const payload = await response.json();
+            const dates = Array.isArray(payload.dates) ? payload.dates : [];
+            selectedDates.clear();
+            dates.forEach((value) => {
+              if (typeof value === 'string') {
+                selectedDates.add(value);
+              }
+            });
+
+            if (adjustMonth && dates.length) {
+              const first = new Date(`${dates[0]}T00:00:00`);
+              if (!Number.isNaN(first.getTime())) {
+                calendarMonth = new Date(first.getFullYear(), first.getMonth(), 1);
+              }
+            }
+
+            renderDates();
+            renderCalendar();
+          } catch (error) {
+            console.error('Failed to load availability for player', error);
+          }
+        }
+
+        {% if recent_selection and recent_selection.dates %}
+          selectedDates.clear();
+          {% for day in recent_selection.dates %}
+          selectedDates.add('{{ day }}');
+          {% endfor %}
+          const initialMonth = new Date('{{ recent_selection.dates[0] }}T00:00:00');
+          if (!Number.isNaN(initialMonth.getTime())) {
+            calendarMonth = new Date(initialMonth.getFullYear(), initialMonth.getMonth(), 1);
+          }
+          const selectedOption = Array.from(playerSelect.options).find(
+            (option) => option.value === '{{ recent_selection.player_id }}'
+          );
+          if (selectedOption) {
+            playerSelect.value = selectedOption.value;
+          }
+        {% endif %}
+
+        renderDates();
+        renderCalendar();
+        filterPlayers();
+
+        if (!selectedDates.size && playerSelect.value) {
+          loadAvailabilityForSelected(false);
+        }
+      })();
+    </script>
+  </body>
+</html>
