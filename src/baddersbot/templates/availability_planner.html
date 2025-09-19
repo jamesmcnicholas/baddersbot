@@ -467,7 +467,6 @@
 
     <script>
       (function () {
-        const availabilitySeed = {{ player_availability | tojson }};
         const playerSearch = document.getElementById('player-search');
         const playerSelect = document.getElementById('player-select');
         const clearDatesBtn = document.getElementById('clear-dates');
@@ -652,27 +651,6 @@
             return;
           }
 
-          const seeded = Array.isArray(availabilitySeed[playerId])
-            ? availabilitySeed[playerId]
-            : [];
-          if (seeded.length) {
-            selectedDates.clear();
-            seeded.forEach((value) => {
-              if (typeof value === 'string') {
-                selectedDates.add(value);
-              }
-            });
-            if (adjustMonth) {
-              const firstSeed = new Date(`${seeded[0]}T00:00:00`);
-              if (!Number.isNaN(firstSeed.getTime())) {
-                calendarMonth = new Date(firstSeed.getFullYear(), firstSeed.getMonth(), 1);
-              }
-            }
-            renderDates();
-            renderCalendar();
-            return;
-          }
-
           try {
             const response = await fetch(`/admin/availability/${encodeURIComponent(playerId)}/slots`, {
               headers: { Accept: 'application/json' },
@@ -692,7 +670,6 @@
                 selectedDates.add(value);
               }
             });
-            availabilitySeed[playerId] = dates;
 
             if (adjustMonth && dates.length) {
               const first = new Date(`${dates[0]}T00:00:00`);

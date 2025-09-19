@@ -38,15 +38,10 @@ class PlayerOption:
 @router.get("/availability", response_class=HTMLResponse)
 async def availability_planner(request: Request) -> HTMLResponse:
     players = _load_player_options()
-    availability_map = {
-        player.id: [day.isoformat() for day in get_player_availability(player.id)]
-        for player in players
-    }
     context = {
         "request": request,
         "players": players,
         "submissions": list_availability_snapshots(),
-        "player_availability": availability_map,
         "flash": None,
     }
     context.update(build_nav_context("availability"))
@@ -68,10 +63,6 @@ async def submit_availability(
     set_player_availability(player.id, dates)
 
     saved_dates = get_player_availability(player.id)
-    availability_map = {
-        option.id: [day.isoformat() for day in get_player_availability(option.id)]
-        for option in player_records.values()
-    }
 
     context = {
         "request": request,
@@ -85,7 +76,6 @@ async def submit_availability(
             "player_id": player.id,
             "dates": [day.isoformat() for day in saved_dates],
         },
-        "player_availability": availability_map,
     }
     context.update(build_nav_context("availability"))
     return templates.TemplateResponse("availability_planner.html", context)
